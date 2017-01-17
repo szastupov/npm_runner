@@ -23,7 +23,7 @@ def get_scripts(package):
         return obj.get("scripts", {})
 
 
-def create_pallette(packages):
+def create_palette(packages):
     for pkg in packages:
         for script in get_scripts(pkg):
             yield [script, os.path.dirname(pkg)]
@@ -48,7 +48,7 @@ class NpmRunCommand(sublime_plugin.WindowCommand):
         self.load_scripts()
 
     def load_scripts(self):
-        self.scripts = list(create_pallette(self.find_packages()))
+        self.scripts = list(create_palette(self.find_packages()))
 
     def is_enabled(self):
         return len(self.scripts) > 0
