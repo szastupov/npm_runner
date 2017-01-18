@@ -1,16 +1,15 @@
 # npm 🏃
 
-Run NPM scripts from Sublime
+Run NPM scripts from Sublime Text
 
-**NOTE:** this is a work in progress
+![screencast](https://thumbs.gfycat.com/YoungHugeAtlanticbluetang-size_restricted.gif)
+
+This package automatically discovers your project.json files, extracts scripts and puts them into a handy command palette, even if you have multiple projects.
+
+## Installation
+
+Soon you'll be able to install it from [Package Control](https://packagecontrol.io) (see this [PR](https://github.com/wbond/package_control_channel/pull/6086) ) but for now, just clone this repo into your packages folder.
 
 ## Usage
 
-Clone it to your packages dir, open a project with at least one package.json, run "NPM: run script" from command palette.
-
-## TODO
-
-- [x] Load exclude from global folder_exclude_patterns
-- [ ] Provide settings for search depth
-- [x] Fix PATH issues
-- [x] Submit to Package Control
+Just start typing "npm" from command palette, you'll figure out the rest.
