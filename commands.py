@@ -49,7 +49,6 @@ class NpmRunCommand(sublime_plugin.WindowCommand):
         self.selected = 0
         self.load_scripts()
         self.env = getenv()
-        print(os.environ)
 
     def load_scripts(self):
         self.packages = list(self.find_packages())
