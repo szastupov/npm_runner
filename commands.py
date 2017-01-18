@@ -89,4 +89,4 @@ class NpmRunCommand(sublime_plugin.WindowCommand):
                 self.render(), self.choose_script, 0, self.selected
             )
         else:
-            sublime.message_dialog("Couldn't find any scripts :(")
+            sublime.status_message(" ⚠️  Couldn't find any scripts")
