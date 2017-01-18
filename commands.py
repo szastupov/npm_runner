@@ -1,3 +1,4 @@
+import sublime
 import sublime_plugin
 import os
 import json
@@ -47,15 +48,11 @@ class NpmRunCommand(sublime_plugin.WindowCommand):
     def __init__(self, window):
         super().__init__(window)
         self.selected = 0
-        self.load_scripts()
         self.env = getenv()
 
     def load_scripts(self):
         self.packages = list(self.find_packages())
         self.scripts = list(get_scripts(self.packages))
-
-    def is_enabled(self):
-        return len(self.scripts) > 0
 
     def find_packages(self):
         exclude = (self.window.active_view()
@@ -87,6 +84,9 @@ class NpmRunCommand(sublime_plugin.WindowCommand):
     def run(self):
         self.load_scripts()  # do we really have to call it each time?
 
-        self.window.show_quick_panel(
-            self.render(), self.choose_script, 0, self.selected
-        )
+        if self.scripts:
+            self.window.show_quick_panel(
+                self.render(), self.choose_script, 0, self.selected
+            )
+        else:
+            sublime.message_dialog("Couldn't find any scripts :(")
