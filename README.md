@@ -13,4 +13,4 @@ Clone it to your packages dir, open a project with at least one package.json, ru
 - [x] Load exclude from global folder_exclude_patterns
 - [ ] Provide settings for search depth
 - [x] Fix PATH issues
-- [ ] Submit to Package Control
+- [x] Submit to Package Control
