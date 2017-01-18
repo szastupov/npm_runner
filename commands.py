@@ -3,6 +3,18 @@ import os
 import json
 
 
+def getenv():
+    path = os.environ.get('PATH', '')
+    ulb = "/usr/local/bin"
+    env = os.environ.copy()
+
+    # Quick and dirty Mac fix
+    if ulb not in path:
+        env['PATH'] = "%s:%s" % (path, ulb)
+
+    return env
+
+
 def find_packages_in(folder, exclude, depth=1):
     package = folder + "/package.json"
     if os.path.exists(package):
@@ -31,23 +43,13 @@ def get_scripts(packages):
             yield (script, dirname, projname)
 
 
-def run_script(window, script):
-    cmd = ["npm", "run", script[0]]
-    # FIXME
-    env = {"PATH": "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"}
-    cwd = script[1]
-    window.run_command("exec", {
-        "cmd": cmd,
-        "env": env,
-        "working_dir": cwd
-    })
-
-
 class NpmRunCommand(sublime_plugin.WindowCommand):
     def __init__(self, window):
         super().__init__(window)
         self.selected = 0
         self.load_scripts()
+        self.env = getenv()
+        print(os.environ)
 
     def load_scripts(self):
         self.packages = list(self.find_packages())
@@ -62,10 +64,19 @@ class NpmRunCommand(sublime_plugin.WindowCommand):
         for folder in self.window.folders():
             yield from find_packages_in(folder, exclude)
 
+    def run_script(self, script):
+        cmd = ["npm", "run", script[0]]
+        cwd = script[1]
+        self.window.run_command("exec", {
+            "cmd": cmd,
+            "env": self.env,
+            "working_dir": cwd
+        })
+
     def choose_script(self, sidx):
         if sidx != -1:
             self.selected = sidx
-            run_script(self.window, self.scripts[sidx])
+            self.run_script(self.scripts[sidx])
 
     def render(self):
         if len(self.packages) > 1:
