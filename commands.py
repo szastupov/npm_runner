@@ -17,16 +17,18 @@ def find_packages_in(folder, exclude, depth=1):
             yield from find_packages_in(dir, exclude, depth - 1)
 
 
-def get_scripts(package):
+def get_package_scripts(package):
     with open(package, "r") as f:
         obj = json.load(f)
         return obj.get("scripts", {})
 
 
-def create_palette(packages):
+def get_scripts(packages):
     for pkg in packages:
-        for script in get_scripts(pkg):
-            yield [script, os.path.dirname(pkg)]
+        for script in get_package_scripts(pkg):
+            dirname = os.path.dirname(pkg)
+            projname = os.path.basename(dirname)
+            yield (script, dirname, projname)
 
 
 def run_script(window, script):
@@ -48,7 +50,8 @@ class NpmRunCommand(sublime_plugin.WindowCommand):
         self.load_scripts()
 
     def load_scripts(self):
-        self.scripts = list(create_palette(self.find_packages()))
+        self.packages = list(self.find_packages())
+        self.scripts = list(get_scripts(self.packages))
 
     def is_enabled(self):
         return len(self.scripts) > 0
@@ -64,8 +67,16 @@ class NpmRunCommand(sublime_plugin.WindowCommand):
             self.selected = sidx
             run_script(self.window, self.scripts[sidx])
 
+    def render(self):
+        if len(self.packages) > 1:
+            return ["%s: %s" % (proj, script)
+                    for script, _, proj in self.scripts]
+        else:
+            return [s[0] for s in self.scripts]
+
     def run(self):
         self.load_scripts()  # do we really have to call it each time?
+
         self.window.show_quick_panel(
-            self.scripts, self.choose_script, 0, self.selected
+            self.render(), self.choose_script, 0, self.selected
         )
