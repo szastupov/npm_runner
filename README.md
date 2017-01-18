@@ -1,4 +1,4 @@
-# NPM task runner
+# NPM 🏃
 
 Run NPM scripts from Sublime
 
